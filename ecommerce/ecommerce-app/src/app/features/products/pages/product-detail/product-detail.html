@@ -1,1 +1,35 @@
-<p>product-detail works!</p>
+<div class="product-detail-container" *ngIf="product; else loadingOrError">
+  <div class="product-image-section">
+    <img *ngIf="product.images?.length; else placeholder" [src]="product.images[0].url" [alt]="product.name">
+    <ng-template #placeholder>
+      <img src="https://via.placeholder.com/500" alt="Placeholder">
+    </ng-template>
+  </div>
+  
+  <div class="product-info-section">
+    <h2>{{product.name}}</h2>
+    <span class="category-badge">{{product.category?.name}}</span>
+    
+    <div class="price-section">
+      <h3>{{product.price | currency:'BRL'}}</h3>
+    </div>
+    
+    <div class="stock-info" [class.out-of-stock]="product.stock === 0">
+      <mat-icon>inventory_2</mat-icon>
+      <span>{{product.stock > 0 ? product.stock + ' em estoque' : 'Fora de estoque'}}</span>
+    </div>
+
+    <p class="description">{{product.description}}</p>
+
+    <button mat-raised-color="primary" class="add-to-cart-btn" [disabled]="product.stock === 0" (click)="addToCart()">
+      <mat-icon>shopping_cart</mat-icon> Adicionar ao Carrinho
+    </button>
+  </div>
+</div>
+
+<ng-template #loadingOrError>
+  <div class="loading-state">
+    <p *ngIf="loading">Carregando produto...</p>
+    <p *ngIf="!loading">Produto não encontrado.</p>
+  </div>
+</ng-template>

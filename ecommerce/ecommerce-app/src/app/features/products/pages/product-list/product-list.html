@@ -1,1 +1,48 @@
-<p>product-list works!</p>
+<div class="catalog-container">
+  <div class="filters-sidebar">
+    <h3>Filtros</h3>
+    
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Buscar produto</mat-label>
+      <input matInput [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Categoria</mat-label>
+      <mat-select [(ngModel)]="selectedCategoryId" (ngModelChange)="applyFilters()">
+        <mat-option value="">Todas</mat-option>
+        <mat-option *ngFor="let cat of categories" [value]="cat.id">{{cat.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Preço</mat-label>
+      <mat-select [(ngModel)]="sortOrder" (ngModelChange)="applyFilters()">
+        <mat-option value="asc">Menor Preço</mat-option>
+        <mat-option value="desc">Maior Preço</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="product-grid">
+    <mat-card class="product-card" *ngFor="let product of filteredProducts">
+      <img mat-card-image *ngIf="product.images?.length; else placeholder" [src]="product.images[0].url" [alt]="product.name">
+      <ng-template #placeholder>
+        <img mat-card-image src="https://via.placeholder.com/200" alt="Placeholder">
+      </ng-template>
+      
+      <mat-card-content>
+        <h4 class="product-title">{{product.name}}</h4>
+        <p class="product-price">{{product.price | currency:'BRL'}}</p>
+      </mat-card-content>
+      
+      <mat-card-actions>
+        <button mat-button color="primary" [routerLink]="['/products', product.id]">Ver Detalhes</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <div *ngIf="filteredProducts.length === 0" class="no-results">
+      <p>Nenhum produto encontrado.</p>
+    </div>
+  </div>
+</div>
